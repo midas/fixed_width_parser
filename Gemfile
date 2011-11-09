@@ -1,7 +1,4 @@
-#!/usr/bin/env ruby
 source :gemcutter
-
-gem 'guard'
 
 group :development, :test do
   gem 'ruby-debug'
@@ -12,6 +9,5 @@ group :development, :test do
 	gem 'guard-shell'
 end
 
-group :test do
-  gem 'rspec'
-end
+# Specify your gem's dependencies in geonames_client.gemspec
+gemspec

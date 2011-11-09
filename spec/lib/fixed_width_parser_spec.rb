@@ -2,14 +2,6 @@ require 'spec_helper'
 
 describe FixedWidthParser do
 
-  class FixedWidthPrcoesser
-    include FixedWidthParser
-  end
-
-  let :processor do
-    FixedWidthPrcoesser.new
-  end
-
   let :fixed_width_file do
     File.join File.dirname( __FILE__ ), '..', 'data', 'test.txt'
   end
@@ -25,6 +17,10 @@ describe FixedWidthParser do
       [:c,  8 ],
       [:d,  14]
     ]
+  end
+
+  let :line do
+    "DOCUMENT  00014438P       PLAT          "
   end
 
   context 'yielding the correct lines' do
@@ -170,6 +166,58 @@ describe FixedWidthParser do
         end
 
       end
+
+    end
+
+  end
+
+  context '.parse' do
+
+    context 'when rstrip is false' do
+
+      subject { FixedWidthParser.parse( line, lengths_format ) }
+
+      it { should == ['DOCUMENT  ', '00014438', 'P       ', 'PLAT          '] }
+
+    end
+
+    context 'when rstrip is true' do
+
+      subject { FixedWidthParser.parse( line, lengths_format, :rstrip => true ) }
+
+      it { should == ['DOCUMENT', '00014438', 'P', 'PLAT'] }
+
+    end
+
+  end
+
+  context '.parse_named' do
+
+    context 'when rstrip is false' do
+
+      subject  { FixedWidthParser.parse_named( line, named_lengths_format ) }
+
+      it { should == {
+             'a', 'DOCUMENT  ',
+             'b', '00014438',
+             'c', 'P       ',
+             'd',  'PLAT          '
+           }
+      }
+
+    end
+
+    context 'when rstrip is true' do
+
+      subject  { FixedWidthParser.parse_named( line, named_lengths_format, :rstrip => true ) }
+
+      it { should == {
+             'a', 'DOCUMENT',
+             'b', '00014438',
+             'c', 'P',
+             'd',  'PLAT'
+           }
+      }
 
     end
 
